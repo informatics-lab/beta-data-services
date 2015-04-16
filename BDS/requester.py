@@ -25,7 +25,26 @@ valid_services = {"WCS" : ["1.0"]}
 
 class BDSRequest(object):
     """
-    Start with just WCS1.0 requests (simple gridded data sets)
+    Send requests and handle responses to BDS.
+
+    Args:
+
+    * api_key: string
+        BDS requires an api key to access the data. This is can received by
+        signing up to Met Office DataPoint. www.metoffice.gov.uk/datapoint/
+
+    Kwargs:
+
+    * model_feed: string
+        The model feed from which you wish to pull data.
+
+    * service/version: string
+        The OGC protocol. (currently only support for WCS1.0)
+
+    * validate_api: boolean
+        If True a dummy request is made during intialisation to check the api
+        key is valid. This is not entirely necessary as the same check is done
+        with all requests.
 
     """
     def __init__(self, api_key,  model_feed="UKPPBEST", service="WCS",
@@ -49,7 +68,7 @@ class BDSRequest(object):
             # Uses self.params (which contains the api_key) to send a dummy
             # request.
             self._check_api_key()
-        self.key = api_key
+        self.api_key = api_key
 
         # Define the root xml namespace. Can this be done by python? It is an
         # attribute of the root
