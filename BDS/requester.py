@@ -21,6 +21,7 @@ from boto.s3.connection import S3Connection, Location
 from xml_reader import read_getCapabilities_xml, read_describeCoverage_xml
 
 valid_model_feeds = ["UKPPBEST"]
+valid_services = {"WCS" : ["1.0"]}
 
 class BDSRequest(object):
     """
@@ -28,9 +29,11 @@ class BDSRequest(object):
 
     """
     def __init__(self, api_key,  model_feed="UKPPBEST", service="WCS",
-                 version="1.0"):
-        # Add optional check of valid key
-        self.key        = api_key
+                 version="1.0", validate_api=False):
+
+        self._check_model_feed(model_feed)
+        self._check_service(service, version)
+
         self.model_feed = model_feed
         self.service    = service
         self.version    = version
@@ -38,13 +41,45 @@ class BDSRequest(object):
         self.BDS_url = "https://dataservices-beta.metoffice.gov.uk/services/"
         self.url     = self.BDS_url + self.model_feed
 
-        self.params = {"key"     : self.key,
+        self.params = {"key"     : api_key,
                        "SERVICE" : self.service,
                        "VERSION" : self.version}
+
+        if validate_api:
+            # Uses self.params (which contains the api_key) to send a dummy
+            # request.
+            self._check_api_key()
+        self.key = api_key
 
         # Define the root xml namespace. Can this be done by python? It is an
         # attribute of the root
         self.xmlns = "{http://www.opengis.net/wcs}"
+
+    @staticmethod
+    def _check_model_feed(model_feed):
+        if model_feed not in valid_model_feeds:
+            raise UserWarning("%s is an invalid model feed. Valid model feeds"\
+                              " are %s" % (model_feed, valid_model_feeds))
+
+    @staticmethod
+    def _check_service(service, version):
+        valid_versions = valid_services.get(service)
+        if valid_versions is None:
+            raise UserWarning("%s is an invalid service. Valid services"\
+                              " are %s" % (service, valid_services.keys()))
+        else:
+            if version not in valid_versions:
+                raise UserWarning("%s is an invalid version for %s service. "\
+                                  "Valid versions are %s"\
+                                   % (version, service, valid_versions))
+
+    def _check_api_key(self, api_key):
+        """
+        Send dummy request to BDS and check response.
+
+        """
+        response = requests.get(self.url, params=self.params)
+        self._check_response(response)
 
     @staticmethod
     def _check_response(response):
