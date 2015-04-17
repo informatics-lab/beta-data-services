@@ -22,15 +22,15 @@ req = BDSRequest(api_key="1234-your-api-key-5678")
 req.getCapabilities() # Prints out all avaiable coverages.
 ```
 
-UKPPBEST_Cloud_base  
+*UKPPBEST_Cloud_base  
 UKPPBEST_Critical_snow_rate  
 UKPPBEST_Falling_Snow_Level  
-UKPPBEST_High_cloud_cover
-UKPPBEST_Lightning_Rate
-UKPPBEST_Low_cloud_cover
-UKPPBEST_Medium_cloud_cover
-UKPPBEST_Precipitation_rate
-etc..
+UKPPBEST_High_cloud_cover  
+UKPPBEST_Lightning_Rate  
+UKPPBEST_Low_cloud_cover  
+UKPPBEST_Medium_cloud_cover  
+UKPPBEST_Precipitation_rate  
+etc..*
 
 ```python
 req.describeCoverage("UKPPBEST_Low_cloud_cover") # Takes a coverage and prints out available parameters.
