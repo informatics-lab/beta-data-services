@@ -30,9 +30,11 @@ UKPPBEST_Lightning_Rate
 UKPPBEST_Low_cloud_cover
 UKPPBEST_Medium_cloud_cover
 UKPPBEST_Precipitation_rate
+</pre>
 ```python
 req.describeCoverage("UKPPBEST_Low_cloud_cover") # Takes a coverage and prints out available parameters.
 ```
+<pre>
 *** NAME ***
 UKPPBEST_Low_cloud_cover
 
