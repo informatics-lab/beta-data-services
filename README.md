@@ -37,58 +37,58 @@ req.describeCoverage("UKPPBEST_Low_cloud_cover") # Takes a coverage and prints o
 ```
 
 _*** NAME ***_  
-UKPPBEST_Low_cloud_cover  
+_UKPPBEST_Low_cloud_cover_  
 
-*** LABEL ***  
-Low cloud cover  
+_*** LABEL ***_  
+_Low cloud cover_  
 
-*** BBOX ***  
--14.0, 7.0, 47.5, 61.0  
+_*** BBOX ***_  
+_-14.0, 7.0, 47.5, 61.0_  
 
-*** DIM_RUNS ***  
-2015-04-16T00:00:00Z  
-2015-04-16T03:00:00Z  
-2015-04-16T06:00:00Z  
-2015-04-16T09:00:00Z  
-etc..  
+_*** DIM_RUNS ***_  
+_2015-04-16T00:00:00Z_  
+_2015-04-16T03:00:00Z_  
+_2015-04-16T06:00:00Z_  
+_2015-04-16T09:00:00Z_  
+_etc.._  
 
-*** DIM_FORECASTS ***  
-PT1H  
-PT2H  
-PT3H  
-PT4H  
-PT5H  
-etc..  
+_*** DIM_FORECASTS ***_  
+_PT1H_  
+_PT2H_  
+_PT3H_  
+_PT4H_  
+_PT5H_  
+_etc.._  
 
-*** TIMES ***  
-2015-04-21T18:00:00Z  
-2015-04-21T21:00:00Z  
-2015-04-22T00:00:00Z  
-2015-04-22T03:00:00Z  
-etc..  
+_*** TIMES ***_  
+_2015-04-21T18:00:00Z_  
+_2015-04-21T21:00:00Z_  
+_2015-04-22T00:00:00Z_  
+_2015-04-22T03:00:00Z_  
+_etc.._  
 
-*** ELEVATIONS ***  
-0-300m  
-0-1500m  
+_*** ELEVATIONS ***_  
+_0-300m_  
+_0-1500m_  
 
-*** CRSS ***  
-CRS:84  
-EPSG:54004  
-EPSG:27700  
-EPSG:4326  
+_*** CRSS ***_  
+_CRS:84_  
+_EPSG:54004_  
+_EPSG:27700_  
+_EPSG:4326_  
 
-*** FORMATS ***  
-GRIB1  
-GRIB2  
-NetCDF3  
-GeoTIFF  
-GeoTIFFfloat  
-KML  
-JSON  
+_*** FORMATS ***_  
+_GRIB1_  
+_GRIB2_  
+_NetCDF3_  
+_GeoTIFF_  
+_GeoTIFFfloat_  
+_KML_  
+_JSON_  
 
-*** INTERPOLATIONS ***  
-nearest-neighbour  
-bilinear  
+_*** INTERPOLATIONS ***_  
+_nearest-neighbour_  
+_bilinear_  
 _high-order_
 
 ```python
