@@ -3,8 +3,12 @@
 Repository for all data handling.
 
 ### BDS
-Python wrapper for sending and recieving requests to Beta Data Services (BDS).
-Includes methods for main requests:
+Python wrapper for sending and receiving requests to Met Office Beta Data
+Services (BDS).  
+To validate the requests an API key is needed, this is received by signing up
+to Met Office DataPoint <www.metoffice.gov.uk/datapoint/>.  
+Requests are made through the BDSRequest class. This includes methods for the
+basic request types:
 
 * getCapabilities()
 * describeCoverage()
@@ -12,14 +16,17 @@ Includes methods for main requests:
 
 As well as wrapper methods:
 
-* createCoverageCubes() - For returning getCoverage() data in an iris.cube.Cube
-* streamCoverageToAWS() - For streaming getCoverage() data straight to Amazon Web Sevices S3 server
+* createCoverageCubes() - For returning getCoverage() data in an
+iris.cube.CubeList.
+* streamCoverageToAWS() - For streaming getCoverage() data straight to Amazon
+Web Services S3 server.
 
-Example use:
+**Example use:**
 
 ```python
-req = BDSRequest(api_key="1234-your-api-key-5678")
-req.getCapabilities() # Prints out all avaiable coverages.
+req = BDSRequest(api_key="your-datapoint-api-key-1234")
+# Print out all available coverages.
+req.getCapabilities()
 ```
 
 _UKPPBEST_Cloud_base  
@@ -33,7 +40,8 @@ UKPPBEST_Precipitation_rate
 etc.._
 
 ```python
-req.describeCoverage("UKPPBEST_Low_cloud_cover") # Takes a coverage and prints out available parameters.
+# Take a coverage name and print out available parameters for it.
+req.describeCoverage("UKPPBEST_Low_cloud_cover")
 ```
 
 _*** NAME ***_  
@@ -92,15 +100,20 @@ _bilinear_
 _high-order_
 
 ```python
-# Use the built in method to build parameter dictionary (needed for getCoverage) properly.
-param_dict = req.getParameterDictionary(bbox=[-14.0, 7.0, 47.5, 61.0], format="NetCDF3", etc..)
+# Use the built in method to help build the parameter dictionary (needed for
+# getCoverage) properly.
+param_dict = req.getParameterDictionary(bbox=[-14.0, 7.0, 47.5, 61.0],
+                                        format="NetCDF3",
+                                        etc..)
 
-# Return a requests.Response instance (returned data content is stored as response.content).
+# Return a requests.Response instance (returned data content is stored as
+# response.content).
 response = req.getCoverage("UKPPBEST_Low_cloud_cover", param_dict)
 
 # Return an iris.cube.CubeList instance.
 cubes = req.createCoverageCubes("UKPPBEST_Low_cloud_cover", param_dict)
 
 # Stream returned data straight to AWS S3 server.
-req.streamCoverageToAWS("UKPPBEST_Low_cloud_cover", param_dict, "bucket-name", "path/to/file.nc")
+req.streamCoverageToAWS("UKPPBEST_Low_cloud_cover", param_dict, "bucket-name",
+                        "path/to/file.nc")
 ```
