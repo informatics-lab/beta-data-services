@@ -5,11 +5,6 @@ To do:
 
 Which parameters are esstential - Is that request dependant, how would this be handled?
 
-There should be safe/efficient mode, i.e. safe checks for valid requests
-before the request is made, efficient doesn't.
-
-is Iris needed? Does it offer any benefit?
-
 Practise with 3D sets/mutilple time steps.
 
 
@@ -283,7 +278,8 @@ class BDSRequest(object):
                             aws_filepath, aws_access_key_id=None,
                             aws_secret_access_key=None, location=Location.EU):
         """
-        Make a getCoverage request and stream the response straight to AWS.
+        Make a getCoverage request and stream the response straight to AWS
+        (Amazon Web Services) S3 server.
 
         Args:
 
