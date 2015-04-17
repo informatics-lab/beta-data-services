@@ -22,7 +22,7 @@ req = BDSRequest(api_key="1234-your-api-key-5678")
 req.getCapabilities() # Prints out all avaiable coverages.
 ```
 
-*UKPPBEST_Cloud_base  
+_UKPPBEST_Cloud_base  
 UKPPBEST_Critical_snow_rate  
 UKPPBEST_Falling_Snow_Level  
 UKPPBEST_High_cloud_cover  
@@ -30,67 +30,67 @@ UKPPBEST_Lightning_Rate
 UKPPBEST_Low_cloud_cover  
 UKPPBEST_Medium_cloud_cover  
 UKPPBEST_Precipitation_rate  
-etc..*
+etc.._
 
 ```python
 req.describeCoverage("UKPPBEST_Low_cloud_cover") # Takes a coverage and prints out available parameters.
 ```
-<pre>
-*** NAME ***
-UKPPBEST_Low_cloud_cover
 
-*** LABEL ***
-Low cloud cover
+_*** NAME ***  
+UKPPBEST_Low_cloud_cover  
 
-*** BBOX ***
--14.0, 7.0, 47.5, 61.0
+*** LABEL ***  
+Low cloud cover  
 
-*** DIM_RUNS ***
-2015-04-16T00:00:00Z
-2015-04-16T03:00:00Z
-2015-04-16T06:00:00Z
-2015-04-16T09:00:00Z
-etc..
+*** BBOX ***  
+-14.0, 7.0, 47.5, 61.0  
 
-*** DIM_FORECASTS ***
-PT1H
-PT2H
-PT3H
-PT4H
-PT5H
-etc..
+*** DIM_RUNS ***  
+2015-04-16T00:00:00Z  
+2015-04-16T03:00:00Z  
+2015-04-16T06:00:00Z  
+2015-04-16T09:00:00Z  
+etc..  
 
-*** TIMES ***
-2015-04-21T18:00:00Z
-2015-04-21T21:00:00Z
-2015-04-22T00:00:00Z
-2015-04-22T03:00:00Z
-etc..
+*** DIM_FORECASTS ***  
+PT1H  
+PT2H  
+PT3H  
+PT4H  
+PT5H  
+etc..  
 
-*** ELEVATIONS ***
-0-300m
-0-1500m
+*** TIMES ***  
+2015-04-21T18:00:00Z  
+2015-04-21T21:00:00Z  
+2015-04-22T00:00:00Z  
+2015-04-22T03:00:00Z  
+etc..  
 
-*** CRSS ***
-CRS:84
-EPSG:54004
-EPSG:27700
-EPSG:4326
+*** ELEVATIONS ***  
+0-300m  
+0-1500m  
 
-*** FORMATS ***
-GRIB1
-GRIB2
-NetCDF3
-GeoTIFF
-GeoTIFFfloat
-KML
-JSON
+*** CRSS ***  
+CRS:84  
+EPSG:54004  
+EPSG:27700  
+EPSG:4326  
 
-*** INTERPOLATIONS ***
-nearest-neighbour
-bilinear
-high-order
-</pre>
+*** FORMATS ***  
+GRIB1  
+GRIB2  
+NetCDF3  
+GeoTIFF  
+GeoTIFFfloat  
+KML  
+JSON  
+
+*** INTERPOLATIONS ***  
+nearest-neighbour  
+bilinear  
+high-order_
+
 ```python
 # Use the built in method to build parameter dictionary (needed for getCoverage) properly.
 param_dict = req.getParameterDictionary(bbox=[-14.0, 7.0, 47.5, 61.0], format="NetCDF3", etc..)
