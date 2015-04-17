@@ -2,7 +2,7 @@
 
 Repository for all data handling.
 
-## BDS
+### BDS
 Python wrapper for sending and recieving requests to Beta Data Services (BDS).
 Includes methods for main requests:
 
@@ -21,16 +21,17 @@ Example use:
 req = BDSRequest(api_key="1234-your-api-key-5678")
 req.getCapabilities() # Prints out all avaiable coverages.
 ```
-<pre>
-UKPPBEST_Cloud_base
-UKPPBEST_Critical_snow_rate
-UKPPBEST_Falling_Snow_Level
+
+UKPPBEST_Cloud_base  
+UKPPBEST_Critical_snow_rate  
+UKPPBEST_Falling_Snow_Level  
 UKPPBEST_High_cloud_cover
 UKPPBEST_Lightning_Rate
 UKPPBEST_Low_cloud_cover
 UKPPBEST_Medium_cloud_cover
 UKPPBEST_Precipitation_rate
-</pre>
+etc..
+
 ```python
 req.describeCoverage("UKPPBEST_Low_cloud_cover") # Takes a coverage and prints out available parameters.
 ```
