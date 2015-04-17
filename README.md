@@ -2,9 +2,9 @@
 
 Repository for all data handling.
 
-BDS
+## BDS
 Python wrapper for sending and recieving requests to Beta Data Services (BDS).
-Includes methods for main requests: 
+Includes methods for main requests:
 
 * getCapabilities()
 * describeCoverage()
@@ -21,7 +21,7 @@ Example use:
 req = BDSRequest(api_key="1234-your-api-key-5678")
 req.getCapabilities() # Prints out all avaiable coverages.
 ```
-
+<pre>
 UKPPBEST_Cloud_base
 UKPPBEST_Critical_snow_rate
 UKPPBEST_Falling_Snow_Level
@@ -87,6 +87,7 @@ JSON
 nearest-neighbour
 bilinear
 high-order
+</pre>
 ```python
 # Use the built in method to build parameter dictionary (needed for getCoverage) properly.
 param_dict = req.getParameterDictionary(bbox=[-14.0, 7.0, 47.5, 61.0], format="NetCDF3", etc..)
@@ -100,4 +101,3 @@ cubes = req.createCoverageCubes("UKPPBEST_Low_cloud_cover", param_dict)
 # Stream returned data straight to AWS S3 server.
 req.streamCoverageToAWS("UKPPBEST_Low_cloud_cover", param_dict, "bucket-name", "path/to/file.nc")
 ```
-
