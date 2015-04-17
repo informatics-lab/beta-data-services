@@ -2,7 +2,7 @@
 
 Repository for all data handling.
 
-### BDS
+### beta-data-services
 Python wrapper for sending and receiving requests to Met Office Beta Data
 Services (BDS).
 
