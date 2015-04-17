@@ -103,15 +103,18 @@ class BDSRequest(object):
         """
         status = response.status_code
         if status != 200:
+            url_message = "Here's the url that was sent:\n", response.url
             if status == 403:
                 raise UserWarning("403 Error, request forbidden. This is "\
-                                  "likely due to an incorrect API key.")
+                                  "likely due to an incorrect API key, but "\
+                                  "sometimes the service is temporarily "\
+                                  "down. If you know your key is fine, try "\
+                                  "again.\n%s") % url_message
             elif status == 404:
-                raise UserWarning("404 Error, server not found. Check the "\
-                                  "BDS_url and model_feed are correct.")
+                raise UserWarning("404 Error, server not found.\n%s"\
+                                  % url_message)
             else:
-                raise UserWarning("%s Error" % status)
-            print "Here's the url that was sent:\n", response.url
+                raise UserWarning("%s Error\n%s" % (status, url_message))
 
     @staticmethod
     def _check_bbox(bbox):
