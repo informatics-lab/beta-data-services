@@ -36,7 +36,7 @@ etc.._
 req.describeCoverage("UKPPBEST_Low_cloud_cover") # Takes a coverage and prints out available parameters.
 ```
 
-_*** NAME ***  
+_*** NAME ***_  
 UKPPBEST_Low_cloud_cover  
 
 *** LABEL ***  
@@ -89,7 +89,7 @@ JSON
 *** INTERPOLATIONS ***  
 nearest-neighbour  
 bilinear  
-high-order_
+_high-order_
 
 ```python
 # Use the built in method to build parameter dictionary (needed for getCoverage) properly.
