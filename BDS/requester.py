@@ -13,7 +13,8 @@ import requests
 import dateutil.parser
 import iris
 from boto.s3.connection import S3Connection, Location
-from xml_reader import read_getCapabilities_xml, read_describeCoverage_xml
+from xml_reader import read_getCapabilities_xml, read_describeCoverage_xml, \
+                       read_xml
 
 valid_model_feeds = ["UKPPBEST"]
 valid_services = {"WCS" : ["1.0"]}
@@ -93,10 +94,10 @@ class BDSRequest(object):
 
         """
         response = requests.get(self.url, params=self.params)
-        self._check_response(response)
+        self._check_response_status(response)
 
     @staticmethod
-    def _check_response(response):
+    def _check_response_status(response):
         """
         Check the status code returned by the request.
 
@@ -115,6 +116,23 @@ class BDSRequest(object):
                                   % url_message)
             else:
                 raise UserWarning("%s Error\n%s" % (status, url_message))
+
+    @staticmethod
+    def _check_getCoverage_response(response):
+        """
+        Check if response is an XML file, if it is there has been an error.
+
+        """
+        if response.headers["content-type"] == 'text/xml':
+            xml_str = response.text
+            # This function checks for an error XML response.
+            read_xml(xml_str)
+            # If read_xml does not detect an error XML something has gone
+            # wrong.
+
+            raise UserWarning("getCoverage has returned an XML file (not what"\
+                              " we want) but the format is not recognised. "\
+                              "Here it is to look at:\n%s" % xml_str)
 
     @staticmethod
     def _check_bbox(bbox):
@@ -184,7 +202,7 @@ class BDSRequest(object):
         payload = {"REQUEST" : "GetCapabilities"}
         payload.update(self.params)
         response = requests.get(self.url, params=payload)
-        self._check_response(response)
+        self._check_response_status(response)
 
         xml_str   = response.text
         coverages = read_getCapabilities_xml(xml_str, namespace=self.xmlns)
@@ -228,7 +246,7 @@ class BDSRequest(object):
                    "COVERAGE" : coverage_name}
         payload.update(self.params)
         response = requests.get(self.url, params=payload)
-        self._check_response(response)
+        self._check_response_status(response)
 
         xml_str  = response.text
         coverage = read_describeCoverage_xml(xml_str, namespace=self.xmlns)
@@ -273,7 +291,8 @@ class BDSRequest(object):
         payload.update(self.params)
 
         response = requests.get(self.url, params=payload, stream=stream)
-        self._check_response(response)
+        self._check_response_status(response)
+        self._check_getCoverage_response(response)
 
         return response
 
