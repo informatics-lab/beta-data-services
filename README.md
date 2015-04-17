@@ -10,18 +10,18 @@ To validate the requests an API key is needed, to get this you must register
 with [Met Office DataPoint](www.metoffice.gov.uk/datapoint/) and follow the
 link to "Your DataPoint API key".
 
-Requests are made through the BDSRequest class. This includes methods for the
-basic request types:
+Requests are made through the _BDSRequest_ class in the _requester_ module.
+This class includes methods for the basic request types:
 
 * getCapabilities()
 * describeCoverage()
 * getCoverage()
 
-As well as wrapper methods:
+as well as wrapper methods:
 
-* createCoverageCubes() - For returning getCoverage() data in an
+* createCoverageCubes() - for returning getCoverage() data in an
 iris.cube.CubeList.
-* streamCoverageToAWS() - For streaming getCoverage() data straight to Amazon
+* streamCoverageToAWS() - for streaming getCoverage() data straight to Amazon
 Web Services S3 server.
 
 **Example use:**
@@ -105,7 +105,7 @@ _high-order_
 ```python
 # Use the built in method to help build the parameter dictionary (needed for
 # getCoverage) properly.
-param_dict = req.getParameterDictionary(bbox=[-14.0, 7.0, 47.5, 61.0],
+param_dict = req.getParameterDictionary(bbox=[-10.0, 20.0, 30.0, 30.0],
                                         format="NetCDF3",
                                         etc..)
 
