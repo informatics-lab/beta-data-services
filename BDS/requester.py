@@ -401,6 +401,9 @@ class BDSRequest(object):
         * elevation: string
             The veritcal level.
 
+        * interpolation: string
+            The interpolation method used if data is re-gridded.
+
         returns:
             dictionary
 
