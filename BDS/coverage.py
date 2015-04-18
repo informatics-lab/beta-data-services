@@ -68,15 +68,40 @@ class Coverage(object):
         print info_str
 
 
-class CoverageList(list):
+class CoverageList(object):
     """
-    List of coverages.
+    List of Coverages.
 
-    TODO..
-    Assert each item is a Coverage instance
-    Any List methods to overwrite?
+    Args:
+
+    * coverages: list, tuple, Coverages
+        Only Coverage list items aloud.
 
     """
+    def __init__(self, *coverages):
+        args_len = len(coverages)
+        if args_len == 0:
+            self.coverage_list = []
+        elif args_len == 1:
+            if type(coverages[0]) in [list, tuple]:
+                self.coverage_list = coverages[0]
+            elif type(coverages[0]) == Coverage:
+                self.coverage_list = [coverages[0]]
+            else:
+                raise TypeError("CoverageList only accepts lists or tuples of"\
+                                " Coverages.")
+        else:
+            self.coverage_list = coverages
+        for item in self.coverage_list:
+            if type(item) != Coverage:
+                raise TypeError("%s is not a Coverage" % item)
+
+
+
+    def __iter__(self):
+        for item in self.coverage_list:
+            yield item
+
     def __str__(self):
         print_str = ""
         for i, item in enumerate(self):
