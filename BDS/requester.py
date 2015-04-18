@@ -279,7 +279,8 @@ class BDSRequest(object):
 
     def streamCoverageToAWS(self, coverage_name, param_dict, aws_bucket_name,
                             aws_filepath, aws_access_key_id=None,
-                            aws_secret_access_key=None, location=Location.EU):
+                            aws_secret_access_key=None, create_bucket=False,
+                            location=Location.EU):
         """
         Make a getCoverage request and stream the response straight to AWS
         (Amazon Web Services) S3 server.
@@ -310,6 +311,11 @@ class BDSRequest(object):
             credentials). These set as environment variables these do not need
             to be given.
 
+        * create_bucket: boolean
+            If True, create a new bucket in the AWS S3 server. Note, new
+            buckets much have an entierly unique name. Default is False, where
+            a pre existig bucket must be specified.
+
         * location: Location (from boto.s3.connection)
             The location of the aws_bucket. Default is EU, also available (at
             time of writing); APNortheast, APSoutheast, APSoutheast2, SAEast,
@@ -319,7 +325,10 @@ class BDSRequest(object):
         response = self.getCoverage(coverage_name, param_dict, stream=True)
 
         s3_conn = S3Connection(aws_access_key_id, aws_secret_access_key)
-        bucket  = s3_conn.get_bucket(aws_bucket_name)
+        if create_bucket:
+            bucket  = s3_conn.create_bucket(aws_bucket_name)
+        else:
+            bucket  = s3_conn.get_bucket(aws_bucket_name)
         key = bucket.new_key(aws_filepath)
         key.set_contents_from_string(response.content)
 
