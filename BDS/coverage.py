@@ -84,26 +84,32 @@ class CoverageList(object):
             self.coverage_list = []
         elif args_len == 1:
             if type(coverages[0]) in [list, tuple]:
-                self.coverage_list = coverages[0]
+                self.coverage_list = list(coverages[0])
             elif type(coverages[0]) == Coverage:
                 self.coverage_list = [coverages[0]]
             else:
-                raise TypeError("CoverageList only accepts lists or tuples of"\
-                                " Coverages.")
+                raise TypeError("CoverageList only accepts lists of Coverages"\
+                                " or Coverages.")
         else:
-            self.coverage_list = coverages
+            self.coverage_list = list(coverages)
         for item in self.coverage_list:
             if type(item) != Coverage:
                 raise TypeError("%s is not a Coverage" % item)
 
-
+    def __add__(self, other):
+        if type(other) == list:
+            other = CoverageList(other)
+        elif type(other) != CoverageList:
+            raise TypeError("Can not concatenate non list type object to a "\
+                            "CoverageList.")
+        return CoverageList(self.coverage_list + other.coverage_list)
 
     def __iter__(self):
         for item in self.coverage_list:
             yield item
 
     def __str__(self):
-        print_str = ""
+        print_covs = []
         for i, item in enumerate(self):
-            print_str += "{i}: {item}\n".format(i=i, item=item)
-        return print_str
+            print_covs.append("{i}: {item}".format(i=i, item=item))
+        return "\n".join(print_covs)
