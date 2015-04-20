@@ -10,7 +10,6 @@ class Test_Coverage(unittest.TestCase):
         self.assertEqual(cov._info_str("bbox", as_list=True),
                          "*** BBOX ***\n1, 2, 3, 4\n\n")
 
-
 class Test_CoverageList(unittest.TestCase):
     def setUp(self):
         self.covs = []
