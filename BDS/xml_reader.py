@@ -201,6 +201,23 @@ def check_xml(root, namespace=err_xmlns):
                                    single_elem=True, namespace=namespace)
         raise UserWarning(err_mess)
 
+def read_xml(xml_str):
+    """
+    Read in XML string and check for error response.
+
+    Args:
+
+    * xml_str: string
+        The xml as a string.
+
+    returns:
+        xml.etree.ElementTree.Element
+    
+    """
+    root = ET.fromstring(xml_str)
+    check_xml(root)
+    return root
+
 def read_describeCoverage_xml(xml_str, namespace=xmlns):
     """
     Extract coverage information from xml (given as string) returned by
@@ -220,8 +237,7 @@ def read_describeCoverage_xml(xml_str, namespace=xmlns):
         Coverage
 
     """
-    root = ET.fromstring(xml_str)
-    check_xml(root)
+    root = read_xml(xml_str)
     # For the describeCoverage xml, only one coverage element is returned under
     # the root.
     cov_elem = getElements("CoverageOffering", root, single_elem=True,
@@ -273,8 +289,7 @@ def read_getCapabilities_xml(xml_str, namespace=xmlns):
         Coverage
 
     """
-    root = ET.fromstring(xml_str)
-    check_xml(root)
+    root = read_xml(xml_str)
     cov_elems = getElements("ContentMetadata/CoverageOffering", root,
                             namespace=namespace)
     coverages = []
