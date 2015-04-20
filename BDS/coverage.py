@@ -68,17 +68,48 @@ class Coverage(object):
         print info_str
 
 
-class CoverageList(list):
+class CoverageList(object):
     """
-    List of coverages.
+    List of Coverages.
 
-    TODO..
-    Assert each item is a Coverage instance
-    Any List methods to overwrite?
+    Args:
+
+    * coverages: list, tuple, Coverages
+        Only Coverage list items aloud.
 
     """
+    def __init__(self, *coverages):
+        args_len = len(coverages)
+        if args_len == 0:
+            self.coverage_list = []
+        elif args_len == 1:
+            if type(coverages[0]) in [list, tuple]:
+                self.coverage_list = list(coverages[0])
+            elif type(coverages[0]) == Coverage:
+                self.coverage_list = [coverages[0]]
+            else:
+                raise TypeError("CoverageList only accepts lists of Coverages"\
+                                " or Coverages.")
+        else:
+            self.coverage_list = list(coverages)
+        for item in self.coverage_list:
+            if type(item) != Coverage:
+                raise TypeError("%s is not a Coverage" % item)
+
+    def __add__(self, other):
+        if type(other) == list:
+            other = CoverageList(other)
+        elif type(other) != CoverageList:
+            raise TypeError("Can not concatenate non list type object to a "\
+                            "CoverageList.")
+        return CoverageList(self.coverage_list + other.coverage_list)
+
+    def __iter__(self):
+        for item in self.coverage_list:
+            yield item
+
     def __str__(self):
-        print_str = ""
+        print_covs = []
         for i, item in enumerate(self):
-            print_str += "{i}: {item}\n".format(i=i, item=item)
-        return print_str
+            print_covs.append("{i}: {item}".format(i=i, item=item))
+        return "\n".join(print_covs)
