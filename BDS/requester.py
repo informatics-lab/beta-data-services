@@ -379,10 +379,7 @@ class BDSRequest(object):
 
         return cubes
 
-    def getParameterDictionary(self, bbox=None, dim_run=None, time=None,
-                               dim_forecast=None, format=None, crs=None,
-                               width=None, height=None, resx=None, resy=None,
-                               resz=None, elevation=None, interpolation=None):
+    def getParameterDictionary(self, format=None, crs=None, elevation=None, bbox=None, dim_run=None, time=None, dim_forecast=None,  width=None, height=None, resx=None, resy=None, resz=None, interpolation=None):
         """
         Create a dictionary of valid parameters for getCoverage method.
 
