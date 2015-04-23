@@ -88,7 +88,7 @@ class BDSRequest(object):
                                   "Valid versions are %s"\
                                    % (version, service, valid_versions))
 
-    def _check_api_key(self, api_key):
+    def _check_api_key(self):
         """
         Send dummy request to BDS and check response.
 
@@ -104,13 +104,13 @@ class BDSRequest(object):
         """
         status = response.status_code
         if status != 200:
-            url_message = "Here's the url that was sent:\n", response.url
+            url_message = "Here's the url that was sent:\n%s" % response.url
             if status == 403:
                 raise UserWarning("403 Error, request forbidden. This is "\
                                   "likely due to an incorrect API key, but "\
                                   "sometimes the service is temporarily "\
                                   "down. If you know your key is fine, try "\
-                                  "again.\n%s") % url_message
+                                  "again.\n%s" % url_message)
             elif status == 404:
                 raise UserWarning("404 Error, server not found.\n%s"\
                                   % url_message)
@@ -157,17 +157,18 @@ class BDSRequest(object):
                               " [x-min, y-min, x-max, y-max]")
 
     @staticmethod
-    def _check_time(time):
+    def _sort_time(time):
         """
-        Check time string is valid.
+        Check time string is valid and return in ISO format.
 
         """
         try:
-            dateutil.parser.parse(time)
+            time_str = dateutil.parser.parse(time).isoformat()
+            if time_str[-1] != "Z":
+                time_str += "Z"
+            return time_str
         except:
-            raise UserWarning("Invalid time argument given: %s. Times must "\
-                              "be strings in ISO format; '{year}-{month}-"\
-                              "{day}T{hour}:{minute}:{second}Z'" % time)
+            raise UserWarning("Invalid time argument given: %s" % time)
 
     @staticmethod
     def _sort_bbox(bbox):
@@ -176,6 +177,17 @@ class BDSRequest(object):
 
         """
         return ",".join([str(val) for val in bbox])
+
+    def _send_request(self, payload):
+        """
+        Add the given payload to the existing parameters, send request and
+        check response.
+
+        """
+        payload.update(self.params)
+        response = requests.get(self.url, params=payload)
+        self._check_response_status(response)
+        return response
 
     def getCapabilities(self, show=True, savepath=None):
         """
@@ -199,11 +211,8 @@ class BDSRequest(object):
             CoverageList
 
         """
-        payload = {"REQUEST" : "GetCapabilities"}
-        payload.update(self.params)
-        response = requests.get(self.url, params=payload)
-        self._check_response_status(response)
-
+        payload   = {"REQUEST" : "GetCapabilities"}
+        response  = self._send_request(payload)
         xml_str   = response.text
         coverages = read_getCapabilities_xml(xml_str, namespace=self.xmlns)
 
@@ -242,12 +251,9 @@ class BDSRequest(object):
             Coverage
 
         """
-        payload = {"REQUEST"  : "DescribeCoverage",
-                   "COVERAGE" : coverage_name}
-        payload.update(self.params)
-        response = requests.get(self.url, params=payload)
-        self._check_response_status(response)
-
+        payload  = {"REQUEST"  : "DescribeCoverage",
+                    "COVERAGE" : coverage_name}
+        response = self._send_request(payload)
         xml_str  = response.text
         coverage = read_describeCoverage_xml(xml_str, namespace=self.xmlns)
 
@@ -285,13 +291,10 @@ class BDSRequest(object):
             requests.Response
 
         """
-        payload = {"REQUEST"  : "GetCoverage",
-                   "COVERAGE" : coverage_name}
+        payload  = {"REQUEST"  : "GetCoverage",
+                    "COVERAGE" : coverage_name}
         payload.update(param_dict)
-        payload.update(self.params)
-
-        response = requests.get(self.url, params=payload, stream=stream)
-        self._check_response_status(response)
+        response = self._send_request(payload)
         self._check_getCoverage_response(response)
 
         return response
@@ -345,9 +348,9 @@ class BDSRequest(object):
 
         s3_conn = S3Connection(aws_access_key_id, aws_secret_access_key)
         if create_bucket:
-            bucket  = s3_conn.create_bucket(aws_bucket_name)
+            bucket = s3_conn.create_bucket(aws_bucket_name)
         else:
-            bucket  = s3_conn.get_bucket(aws_bucket_name)
+            bucket = s3_conn.get_bucket(aws_bucket_name)
         key = bucket.new_key(aws_filepath)
         key.set_contents_from_string(response.content)
 
@@ -433,10 +436,10 @@ class BDSRequest(object):
             bbox_str = self._sort_bbox(bbox)
             param_dict["BBOX"] = bbox_str
         if dim_run:
-            self._check_time(dim_run)
+            dim_run = self._sort_time(dim_run)
             param_dict["DIM_RUN"] = dim_run
         if time:
-            self._check_time(time)
+            time = self._sort_time(time)
             param_dict["TIME"] = time
         if dim_forecast:
             param_dict["DIM_FORECAST"] = dim_forecast
