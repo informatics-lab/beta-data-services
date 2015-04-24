@@ -11,6 +11,7 @@ Practise with 3D sets/mutilple time steps.
 """
 import requests
 import dateutil.parser
+import datetime
 import iris
 from boto.s3.connection import S3Connection, Location
 from xml_reader import read_getCapabilities_xml, read_describeCoverage_xml, \
@@ -135,9 +136,71 @@ class BDSRequest(object):
                               "Here it is to look at:\n%s" % xml_str)
 
     @staticmethod
-    def _check_bbox(bbox):
+    def _check_dim_forecast(dim_fcst):
         """
-        Check bbox is valid.
+        Check the dim_forecast is valid format.
+
+        """
+        # Can this be improved? Is format always PT{number}{H/M/S}?
+        if type(dim_fcst) != str:
+            raise ValueError("dim_forecast must be given as a string.")
+
+    @staticmethod
+    def _sort_grid_num(grid_num):
+        """
+        Check number grid points is valid integer like.
+
+        """
+        if type(grid_num) != int:
+            err = ValueError("Width/height values must be integer like.")
+            if type(grid_num) == str:
+                try:
+                    grid_num = int(grid_num)
+                except ValueError:
+                    raise err
+            elif type(grid_num) == float:
+                if grid_num % 1 != 0:
+                    raise err
+                else:
+                    grid_num = int(grid_num)
+            else:
+                raise err
+        return grid_num
+
+    @staticmethod
+    def _sort_grid_size(grid_size):
+        """
+        Check number grid points is valid format.
+
+        """
+        try:
+            return float(grid_size)
+        except ValueError:
+            raise ValueError("resx/resy values must be float like.")
+
+    @staticmethod
+    def _sort_time(time):
+        """
+        Check time string is valid time format and return in ISO format.
+
+        """
+        try:
+            dt = dateutil.parser.parse(time)
+        except ValueError, AttributeError:
+            raise ValueError("Invalid time argument given: %s" % time)
+        # Refresh a new datetime object in case tzinfo has been implied.
+        dt = datetime.datetime(dt.year, dt.month, dt.day, dt.hour, dt.minute,
+                               dt.second)
+        time_str = dt.isoformat()
+        if time_str[-1] != "Z":
+            time_str += "Z"
+        return time_str
+
+    @staticmethod
+    def _sort_bbox(bbox):
+        """
+        Check bbox is valid and convert to bbox into string format required for
+        BDS request.
 
         """
         if type(bbox) not in [list, tuple]:
@@ -156,65 +219,6 @@ class BDSRequest(object):
             raise UserWarning("bbox min value larger than max. Format must be"\
                               " [x-min, y-min, x-max, y-max]")
 
-    @staticmethod
-    def _check_dim_forecast(dim_fcst):
-        """
-        Check the dim_forecast is valid format.
-
-        """
-        if type(dim_fcst) != str:
-            raise ValueError("dim_forecast must be given as a string.")
-
-    @staticmethod
-    def _check_grid_num(grid_num):
-        """
-        Check number grid points is valid format.
-
-        """
-        try:
-            int(grid_num)
-        except ValueError:
-            raise ValueError("Width/height values must be integer like.")
-
-    @staticmethod
-    def _check_grid_size(grid_size):
-        """
-        Check number grid points is valid format.
-
-        """
-        try:
-            float(grid_size)
-        except ValueError:
-            raise ValueError("resx/resy values must be float like.")
-
-    def _check_interpolation(interpolation):
-        """
-        Check valid interpolation format
-
-        """
-        if type(interpolation) != str:
-            raise ValueError("interpolation must be given as a string.")
-
-    @staticmethod
-    def _sort_time(time):
-        """
-        Check time string is valid time format and return in ISO format.
-
-        """
-        try:
-            time_str = dateutil.parser.parse(time).isoformat()
-        except ValueError, AttributeError:
-            raise ValueError("Invalid time argument given: %s" % time)
-        if time_str[-1] != "Z":
-            time_str += "Z"
-        return time_str
-
-    @staticmethod
-    def _sort_bbox(bbox):
-        """
-        Convert to string format requires for BDS request.
-
-        """
         return ",".join([str(val) for val in bbox])
 
     def _send_request(self, payload):
@@ -441,7 +445,7 @@ class BDSRequest(object):
         is consequential. They can not be used together (even if the fit).
 
         This method does not verify if the given parameters are available, it
-        only asserts they are in the correct format.
+        only asserts correct formats.
 
         Args:
 
@@ -499,7 +503,6 @@ class BDSRequest(object):
         param_dict["ELEVATION"] = elevation
 
         if bbox:
-            self._check_bbox(bbox)
             bbox_str = self._sort_bbox(bbox)
             param_dict["BBOX"] = bbox_str
 
@@ -522,23 +525,22 @@ class BDSRequest(object):
             raise UserWarning("Cannot specify width and resx together; one "\
                               "implies the other.")
         if width:
-            self._check_grid_num(width)
+            width = self._sort_grid_num(width)
             param_dict["WIDTH"] = width
         if resx:
-            self._check_grid_size(resx)
+            resx = self._sort_grid_size(resx)
             param_dict["RESX"] = resx
 
         if height and resy:
             raise UserWarning("Cannot specify height and resy together; one "\
                               "implies the other.")
         if height:
-            self._check_grid_num(height)
+            height = self._sort_grid_num(height)
             param_dict["HEIGHT"] = height
         if resy:
-            self._check_grid_size(resy)
+            resy = self._sort_grid_size(resy)
             param_dict["RESY"] = resy
 
         if interpolation:
-            self._check_interpolation(interpolation)
             param_dict["INTERPOLATION"] = interpolation
         return param_dict
