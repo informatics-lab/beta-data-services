@@ -247,7 +247,7 @@ class BDSRequest(object):
             If True, print out all the returned coverage names.
 
         * savepath: string or None
-            If a filepath (and name) is provided, save the the returned XML
+            If a filepath (and name) is provided, save the returned XML
             (unless it is an XML error response).
 
         returns:
@@ -287,7 +287,7 @@ class BDSRequest(object):
             If True, print out all the coverage information.
 
         * savepath: string or None
-            If a filepath (and name) is provided, save the the returned XML
+            If a filepath (and name) is provided, save the returned XML
             (unless it is an XML error response).
 
         returns:
@@ -373,25 +373,25 @@ class BDSRequest(object):
 
         * aws_access_key_id/aws_secret_access_key: string
             These are provided with an AWS account (then downloading your
-            credentials). These set as environment variables these do not need
-            to be given.
+            credentials). If these are set as environment variables they do not
+            need to be given.
 
         * create_bucket: boolean
             If True, create a new bucket in the AWS S3 server. Note, new
-            buckets much have an entierly unique name. Default is False, where
-            a pre existig bucket must be specified.
+            buckets must have an entierly unique name. Default is False, where
+            a pre-existig bucket must be specified.
 
         * location: Location (from boto.s3.connection)
-            The location of the aws_bucket. Default is EU, also available (at
-            time of writing); APNortheast, APSoutheast, APSoutheast2, SAEast,
-            USWest, USWest2
+            The location of the aws_bucket if create_bucket is True. Default is
+            EU, also available (at time of writing); APNortheast, APSoutheast,
+            APSoutheast2, SAEast, USWest, USWest2
 
         """
         response = self.getCoverage(coverage_name, param_dict, stream=True)
 
         s3_conn = S3Connection(aws_access_key_id, aws_secret_access_key)
         if create_bucket:
-            bucket = s3_conn.create_bucket(aws_bucket_name)
+            bucket = s3_conn.create_bucket(aws_bucket_name, location=location)
         else:
             bucket = s3_conn.get_bucket(aws_bucket_name)
         key = bucket.new_key(aws_filepath)
