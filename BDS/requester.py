@@ -397,7 +397,7 @@ class BDSRequest(object):
         key = bucket.new_key(aws_filepath)
         key.set_contents_from_string(response.content)
 
-    def createCoverageCube(self, coverage_name, param_dict):
+    def createCoverageCubes(self, coverage_name, param_dict):
         """
         Make a getCoverage request and load the response into an iris CubeList.
 
@@ -420,7 +420,7 @@ class BDSRequest(object):
         with open(iris_filename, "w") as outfile:
             outfile.write(response.content)
 
-        return iris.load_cube(iris_filename)
+        return iris.load(iris_filename)
 
     def getParameterDictionary(self, format, crs, elevation, bbox=None,
                                dim_run=None, time=None, dim_forecast=None,

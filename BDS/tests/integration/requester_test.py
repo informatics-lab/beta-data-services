@@ -77,9 +77,9 @@ class Test_BDSRequest(unittest.TestCase):
 
 
         ##### Test createCoverageCube #####
-        cube = request.createCoverageCube(cov_name, param_dict)
+        cube = request.createCoverageCubes(cov_name, param_dict)
         # Assert a valid cube has been created.
-        self.assertEqual(cube.name(), cov_name)
+        self.assertEqual(cube[0].name(), cov_name)
 
 
         # ##### Test streamCoverageToAWS #####
