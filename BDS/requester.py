@@ -69,7 +69,7 @@ class BDSRequest(object):
 
         # Define the root xml namespace. Can this be done by python? It is an
         # attribute of the root
-        self.xmlns = "{http://www.opengis.net/wcs}"
+        self.xmlns = "http://www.opengis.net/wcs"
 
     @staticmethod
     def _check_model_feed(model_feed):
@@ -397,7 +397,7 @@ class BDSRequest(object):
         key = bucket.new_key(aws_filepath)
         key.set_contents_from_string(response.content)
 
-    def createCoverageCubes(self, coverage_name, param_dict):
+    def createCoverageCube(self, coverage_name, param_dict):
         """
         Make a getCoverage request and load the response into an iris CubeList.
 
@@ -414,16 +414,13 @@ class BDSRequest(object):
         """
         # Make sure the returned data is in a format iris can read.
         param_dict["FORMAT"] = "NetCDF3"
-
         response = self.getCoverage(coverage_name, param_dict)
 
         iris_filename = "_temp_iris_data.nc"
         with open(iris_filename, "w") as outfile:
             outfile.write(response.content)
 
-        cubes = iris.load(iris_filename)
-
-        return cubes
+        return iris.load_cube(iris_filename)
 
     def getParameterDictionary(self, format, crs, elevation, bbox=None,
                                dim_run=None, time=None, dim_forecast=None,

@@ -104,9 +104,21 @@ class CoverageList(object):
                             "CoverageList.")
         return CoverageList(self.coverage_list + other.coverage_list)
 
+    def __len__(self):
+        return len(self.coverage_list)
+
     def __iter__(self):
         for item in self.coverage_list:
             yield item
+
+    def __delitem__(self, key):
+        self.coverage_list.__delitem__(key)
+
+    def __getitem__(self, key):
+        return self.coverage_list.__getitem__(key)
+
+    def __setitem__(self, key, value):
+        self.coverage_list.__setitem__(key, value)
 
     def __str__(self):
         print_covs = []

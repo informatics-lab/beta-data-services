@@ -2,8 +2,8 @@ import xml.etree.ElementTree as ET
 from coverage import Coverage, CoverageList
 
 # Defaults
-xmlns = "{http://www.opengis.net/wcs}"
-err_xmlns = "{http://www.opengis.net/ows}"
+xmlns     = "http://www.opengis.net/wcs"
+err_xmlns = "http://www.opengis.net/ows"
 
 ########## Generic functions ##########
 
@@ -22,8 +22,9 @@ def getElements(path, root, single_elem=False, namespace=None):
     Kwargs:
 
     * single_elem: boolean
-        If True, this raises an error if more than one element is found. It
-        also changes the return type to a single value (instead of list).
+        If True, this raises an error if more than one (or no) element is
+        found. It also changes the return type to a single value (instead of
+        list).
 
     * namespace: string or None
         The xml namespace for the given path.
@@ -34,6 +35,7 @@ def getElements(path, root, single_elem=False, namespace=None):
 
     """
     if namespace:
+        namespace = "{%s}" % namespace
         path  = path.split('/')
         path = [namespace + elem_name for elem_name in path]
         path = "/".join(path)
@@ -91,7 +93,7 @@ def getElementsText(path, root, single_elem=False, namespace=None):
         else:
             elems_text = [txt for txt in elems_text if txt != ""]
             print "Warning! This is strange, {cnt} out of {tot} {path} "\
-                  "element(s) contain text (normally its all or none!)."\
+                  "elements contain text (normally its all or none!)."\
                   "\nThe element(s) with no text have be removed."\
                   .format(cnt=len(elems_text) - no_txt_count,
                           tot=len(elems_text),
@@ -114,7 +116,7 @@ def getBBox(root, namespace=xmlns):
     Args:
 
     * root: xml.etree.ElementTree.Element
-        The element from which the given path starts.
+        The element under which the lonLatEnvelope lives.
 
     Kwargs:
 
@@ -125,7 +127,7 @@ def getBBox(root, namespace=xmlns):
         list
 
     """
-    # Assert this is a correct element somehow?
+    # single_elem = True rasies error if none found.
     lonLatEnvelope = getElements("lonLatEnvelope", root, single_elem=True,
                                  namespace=namespace)
     lons = lonLatEnvelope[0]
@@ -196,7 +198,11 @@ def check_xml(root, namespace=err_xmlns):
     Check the XML is not the error response
 
     """
-    if root.tag.strip() == namespace + "ExceptionReport":
+    if namespace:
+        error_tag = "{%s}ExceptionReport" % namespace
+    else:
+        error_tag = "ExceptionReport"
+    if root.tag.strip() == error_tag:
         err_mess = getElementsText("Exception/ExceptionText", root,
                                    single_elem=True, namespace=namespace)
         raise UserWarning(err_mess)
@@ -212,7 +218,7 @@ def read_xml(xml_str):
 
     returns:
         xml.etree.ElementTree.Element
-    
+
     """
     root = ET.fromstring(xml_str)
     check_xml(root)
