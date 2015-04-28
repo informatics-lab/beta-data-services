@@ -17,11 +17,11 @@ def file_to_string(filename):
         file_str = infile.read()
     return file_str
 
-xml_simple    = file_to_string("xml_examples/simple.xml")
-xml_simple_ns = file_to_string("xml_examples/simple_ns.xml")
-xml_getCaps   = file_to_string("xml_examples/getCapabilities.xml")
-xml_desCov    = file_to_string("xml_examples/describeCoverage.xml")
-xml_error     = file_to_string("xml_examples/error.xml")
+xml_simple    = file_to_string("BDS/tests/unit/xml_examples/simple.xml")
+xml_simple_ns = file_to_string("BDS/tests/unit/xml_examples/simple_ns.xml")
+xml_getCaps   = file_to_string("BDS/tests/unit/xml_examples/getCapabilities.xml")
+xml_desCov    = file_to_string("BDS/tests/unit/xml_examples/describeCoverage.xml")
+xml_error     = file_to_string("BDS/tests/unit/xml_examples/error.xml")
 
 xml_simple_root    = ET.fromstring(xml_simple)
 xml_simple_ns_root = ET.fromstring(xml_simple_ns)
