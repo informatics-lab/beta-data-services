@@ -185,13 +185,9 @@ class BDSRequest(object):
 
         """
         try:
-            dt = dateutil.parser.parse(time)
+            time_str = dateutil.parser.parse(time, ignoretz=True).isoformat()
         except ValueError, AttributeError:
             raise ValueError("Invalid time argument given: %s" % time)
-        # Refresh a new datetime object in case tzinfo has been implied.
-        dt = datetime.datetime(dt.year, dt.month, dt.day, dt.hour, dt.minute,
-                               dt.second)
-        time_str = dt.isoformat()
         if time_str[-1] != "Z":
             time_str += "Z"
         return time_str

@@ -4,6 +4,7 @@ import requests
 import xml.etree.ElementTree as ET
 import random
 import boto
+from boto.s3.connection import S3Connection
 from BDS.requester import BDSRequest
 from BDS.coverage import Coverage, CoverageList
 
@@ -76,27 +77,27 @@ class Test_BDSRequest(unittest.TestCase):
         self.assertNotEqual(response.headers['content-type'], 'text/xml')
 
 
-        ##### Test createCoverageCube #####
-        cube = request.createCoverageCubes(cov_name, param_dict)
-        # Assert a valid cube has been created.
-        self.assertEqual(cube[0].name(), cov_name)
-
-
         # ##### Test streamCoverageToAWS #####
         aws_bucket_name = "simons-test-bucket-2345"
         aws_filepath    = "test_data.nc"
 
-        try:
-            request.streamCoverageToAWS(cov_name, param_dict,
-                                        aws_bucket_name,
-                                        aws_filepath)
-        except:
-            raise UserWarning("streamCoverageToAWS failed")
-        else:
-            # Delete test data
-            bucket = s3_conn.get_bucket(aws_bucket_name)
-            key    = bucket.new_key(aws_filepath)
-            bucket.delete_key(key)
+
+        request.streamCoverageToAWS(
+                    cov_name, param_dict, aws_bucket_name, aws_filepath,
+                    aws_access_key_id=os.environ['AWS_KEY'],
+                    aws_secret_access_key=os.environ['AWS_SECRET_KEY'])
+
+        # Delete test data
+        s3_conn = S3Connection(
+                  aws_access_key_id=os.environ['AWS_KEY'],
+                  aws_secret_access_key=os.environ['AWS_SECRET_KEY'])
+        bucket  = s3_conn.get_bucket(aws_bucket_name)
+        key     = bucket.new_key(aws_filepath)
+        bucket.delete_key(key)
+
+
+        ##### Test createCoverageCube #####
+        cube = request.createCoverageCubes(cov_name, param_dict)
 
 
 if __name__ == '__main__':
