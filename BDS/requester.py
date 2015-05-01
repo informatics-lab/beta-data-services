@@ -185,9 +185,11 @@ class BDSRequest(object):
 
         """
         try:
-            time_str = dateutil.parser.parse(time, ignoretz=True).isoformat()
+            # Returns a datetime object.
+            dt = dateutil.parser.parse(time, ignoretz=True)
         except ValueError, AttributeError:
             raise ValueError("Invalid time argument given: %s" % time)
+        time_str = dt.isoformat()
         if time_str[-1] != "Z":
             time_str += "Z"
         return time_str
