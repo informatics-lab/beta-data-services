@@ -31,23 +31,24 @@ xml_desCov_root    = ET.fromstring(xml_desCov)[0]
 xml_error_root     = ET.fromstring(xml_error)
 
 
-class Test_getElements(unittest.TestCase):
+class Test_get_elements(unittest.TestCase):
     def test_simple_path(self):
         # Get first element under the root, this is elemOne.
         required_elem = xml_simple_root[0]
-        found_elems  = getElements("elemOne", xml_simple_root)
-        # getElements returns a list, there is only one elemTwo element.
+        found_elems  = get_elements("elemOne", xml_simple_root)
+        # get_elements returns a list, there is only one elemTwo element.
         self.assertEqual(found_elems[0], required_elem)
 
     def test_single_elem(self):
         required_elem = xml_simple_root[0]
         # If single_elem true, a single element (not a list) should be
         # returned.
-        founds_elem = getElements("elemOne", xml_simple_root, single_elem=True)
+        founds_elem = get_elements("elemOne", xml_simple_root,
+                                   single_elem=True)
         self.assertEqual(founds_elem, required_elem)
 
         # An error should be raised if more than one are found.
-        self.assertRaises(UserWarning, getElements,
+        self.assertRaises(UserWarning, get_elements,
                           "elemTwo/values/singleValue", xml_simple_root,
                           single_elem=True)
 
@@ -55,68 +56,68 @@ class Test_getElements(unittest.TestCase):
         # Get first element under the root, this is elemOne.
         required_elem = xml_simple_ns_root[0]
         # This xml has a namespace called "test_namespace".
-        found_elems  = getElements("elemOne", xml_simple_ns_root,
+        found_elems  = get_elements("elemOne", xml_simple_ns_root,
                                     namespace="test_namespace")
-        # getElements returns a list, there is only one elemOne element.
+        # get_elements returns a list, there is only one elemOne element.
         self.assertEqual(found_elems[0], required_elem)
 
         # Nothing should be returned if namespace not given.
-        found_elems  = getElements("elemOne", xml_simple_ns_root)
+        found_elems  = get_elements("elemOne", xml_simple_ns_root)
         self.assertEqual(found_elems, [])
 
 
-class Test_getElementsText(unittest.TestCase):
+class Test_get_elements_text(unittest.TestCase):
     def test_simple_text(self):
-        found_text = getElementsText("elemTwo/name", xml_simple_root)
+        found_text = get_elements_text("elemTwo/name", xml_simple_root)
         self.assertEqual(found_text[0], "Element 2")
 
     def test_single_elem(self):
         # If single_elem true, a single string (not a list) should be
         # returned.
-        found_text = getElementsText("elemTwo/name", xml_simple_root,
-                                     single_elem=True)
+        found_text = get_elements_text("elemTwo/name", xml_simple_root,
+                                       single_elem=True)
         self.assertEqual(found_text, "Element 2")
 
         # An error should be raised if more than one are found.
-        self.assertRaises(UserWarning, getElementsText,
+        self.assertRaises(UserWarning, get_elements_text,
                           "elemTwo/values/singleValue", xml_simple_root,
                           single_elem=True)
 
     def test_no_text(self):
         # If an element contains no text, an error should be raised.
-        self.assertRaises(UserWarning, getElementsText, "elemTwo",
+        self.assertRaises(UserWarning, get_elements_text, "elemTwo",
                           xml_simple_root)
 
 
-class Test_getBBox(unittest.TestCase):
+class Test_get_bbox(unittest.TestCase):
     def test_returned_val(self):
         expected_bbox = [-10, 0, 10, 20]
         # The bbox (lonLatEnvelope) element must be directly under the given
         # root.
-        root_elem = getElements("elemThree", xml_simple_root, single_elem=True)
-        bbox = getBBox(root_elem, namespace=None)
+        root_elem = get_elements("elemThree", xml_simple_root, single_elem=True)
+        bbox = get_bbox(root_elem, namespace=None)
         self.assertEqual(bbox, expected_bbox)
 
     def test_bad_root(self):
         # There is no bbox in root element of simple.xml
-        self.assertRaises(UserWarning, getBBox, xml_simple_root)
+        self.assertRaises(UserWarning, get_bbox, xml_simple_root)
 
 
-class Test_getValues(unittest.TestCase):
+class Test_get_values(unittest.TestCase):
     def test_returned_vals(self):
         expected_vals = ["1","2","3"]
         # The values live under elemTwo.
-        root_elem = getElements("elemTwo", xml_simple_root, single_elem=True)
-        vals = getValues(root_elem, namespace=None)
+        root_elem = get_elements("elemTwo", xml_simple_root, single_elem=True)
+        vals = get_values(root_elem, namespace=None)
         self.assertEqual(vals, expected_vals)
 
 
-class Test_getAxisDescriberValues(unittest.TestCase):
+class Test_get_axis_describer_values(unittest.TestCase):
     # This function is for looking at XML files returned by BDS so use example
     # describeCoverage.xml given by xml_desCov_root.
     def test_returned_vals(self):
         expected_vals = ['4500-4400m']
-        vals = getAxisDescriberValues("ELEVATION", xml_desCov_root)
+        vals = get_axis_describer_values("ELEVATION", xml_desCov_root)
         self.assertEquals(vals, expected_vals)
 
 

@@ -1,24 +1,17 @@
 """
-Python wrapper for getting data from BDS.
-
-To do:
-
-Which parameters are esstential - Is that request dependant, how would this be handled?
-
-Practise with 3D sets/mutilple time steps.
-
+Module for getting data from Met Office Beta Data Services (BDS).
 
 """
 import requests
 import dateutil.parser
-import datetime
 import iris
 from boto.s3.connection import S3Connection, Location
-from xml_reader import read_getCapabilities_xml, read_describeCoverage_xml, \
-                       read_xml
+from BDS.xml_reader import read_getCapabilities_xml,  \
+                           read_describeCoverage_xml, \
+                           read_xml
 
-valid_model_feeds = ["UKPPBEST"]
-valid_services = {"WCS" : ["1.0"]}
+VALID_MODEL_FEEDS = ["UKPPBEST"]
+VALID_SERVICES = {"WCS" : ["1.0"]}
 
 class BDSRequest(object):
     """
@@ -44,7 +37,7 @@ class BDSRequest(object):
         with all requests.
 
     """
-    def __init__(self, api_key,  model_feed="UKPPBEST", service="WCS",
+    def __init__(self, api_key, model_feed="UKPPBEST", service="WCS",
                  version="1.0", validate_api=False):
 
         self._check_model_feed(model_feed)
@@ -54,8 +47,8 @@ class BDSRequest(object):
         self.service    = service
         self.version    = version
 
-        self.BDS_url = "https://dataservices-beta.metoffice.gov.uk/services/"
-        self.url     = self.BDS_url + self.model_feed
+        self.bds_url = "https://dataservices-beta.metoffice.gov.uk/services/"
+        self.url     = self.bds_url + self.model_feed
 
         self.params = {"key"     : api_key,
                        "SERVICE" : self.service,
@@ -73,16 +66,16 @@ class BDSRequest(object):
 
     @staticmethod
     def _check_model_feed(model_feed):
-        if model_feed not in valid_model_feeds:
+        if model_feed not in VALID_MODEL_FEEDS:
             raise UserWarning("%s is an invalid model feed. Valid model feeds"\
-                              " are %s" % (model_feed, valid_model_feeds))
+                              " are %s" % (model_feed, VALID_MODEL_FEEDS))
 
     @staticmethod
     def _check_service(service, version):
-        valid_versions = valid_services.get(service)
+        valid_versions = VALID_SERVICES.get(service)
         if valid_versions is None:
             raise UserWarning("%s is an invalid service. Valid services"\
-                              " are %s" % (service, valid_services.keys()))
+                              " are %s" % (service, VALID_SERVICES.keys()))
         else:
             if version not in valid_versions:
                 raise UserWarning("%s is an invalid version for %s service. "\
@@ -142,7 +135,7 @@ class BDSRequest(object):
 
         """
         # Can this be improved? Is format always PT{number}{H/M/S}?
-        if type(dim_fcst) != str:
+        if not isinstance(dim_fcst, str):
             raise ValueError("dim_forecast must be given as a string.")
 
     @staticmethod
@@ -151,14 +144,14 @@ class BDSRequest(object):
         Check number grid points is valid integer like.
 
         """
-        if type(grid_num) != int:
+        if not isinstance(grid_num, int):
             err = ValueError("Width/height values must be integer like.")
-            if type(grid_num) == str:
+            if isinstance(grid_num, str):
                 try:
                     grid_num = int(grid_num)
                 except ValueError:
                     raise err
-            elif type(grid_num) == float:
+            elif isinstance(grid_num, float):
                 if grid_num % 1 != 0:
                     raise err
                 else:
@@ -186,10 +179,10 @@ class BDSRequest(object):
         """
         try:
             # Returns a datetime object.
-            dt = dateutil.parser.parse(time, ignoretz=True)
+            dtime = dateutil.parser.parse(time, ignoretz=True)
         except ValueError, AttributeError:
             raise ValueError("Invalid time argument given: %s" % time)
-        time_str = dt.isoformat()
+        time_str = dtime.isoformat()
         if time_str[-1] != "Z":
             time_str += "Z"
         return time_str
@@ -219,14 +212,14 @@ class BDSRequest(object):
 
         return ",".join([str(val) for val in bbox])
 
-    def _send_request(self, payload):
+    def _send_request(self, payload, stream=False):
         """
         Add the given payload to the existing parameters, send request and
         check response.
 
         """
         payload.update(self.params)
-        response = requests.get(self.url, params=payload)
+        response = requests.get(self.url, params=payload, stream=stream)
         self._check_response_status(response)
         return response
 
@@ -335,7 +328,7 @@ class BDSRequest(object):
         payload  = {"REQUEST"  : "GetCoverage",
                     "COVERAGE" : coverage_name}
         payload.update(param_dict)
-        response = self._send_request(payload)
+        response = self._send_request(payload, stream=stream)
         self._check_getCoverage_response(response)
 
         return response
