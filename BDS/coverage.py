@@ -1,7 +1,11 @@
+"""
+Module of classes for holding and displaying information about coverages.
+
+"""
 class Coverage(object):
     """
     A coverage is a description of available data which can be requested from
-    BDS, for a particular model variable. This variable is described by its
+    BDS for a particular model variable. This variable is described by its
     name (and label), for example, UKPPBEST_High_cloud_cover.
 
     """
@@ -32,7 +36,7 @@ class Coverage(object):
         """
         attr_val = getattr(self, attr_name)
         if attr_val is not None:
-            if type(attr_val) == list:
+            if isinstance(attr_val, list):
                 # Make sure all list items are strings so .join works.
                 attr_val = [str(val) for val in attr_val]
                 if as_list:
@@ -83,9 +87,11 @@ class CoverageList(object):
         if args_len == 0:
             self.coverage_list = []
         elif args_len == 1:
-            if type(coverages[0]) in [list, tuple]:
+            if isinstance(coverages[0], list):
+                self.coverage_list = coverages[0]
+            elif isinstance(coverages[0], tuple):
                 self.coverage_list = list(coverages[0])
-            elif type(coverages[0]) == Coverage:
+            elif isinstance(coverages[0], Coverage):
                 self.coverage_list = [coverages[0]]
             else:
                 raise TypeError("CoverageList only accepts lists of Coverages"\
@@ -93,13 +99,13 @@ class CoverageList(object):
         else:
             self.coverage_list = list(coverages)
         for item in self.coverage_list:
-            if type(item) != Coverage:
+            if not isinstance(item, Coverage):
                 raise TypeError("%s is not a Coverage" % item)
 
     def __add__(self, other):
-        if type(other) == list:
+        if isinstance(other, list):
             other = CoverageList(other)
-        elif type(other) != CoverageList:
+        elif not isinstance(other, CoverageList):
             raise TypeError("Can not concatenate non list type object to a "\
                             "CoverageList.")
         return CoverageList(self.coverage_list + other.coverage_list)

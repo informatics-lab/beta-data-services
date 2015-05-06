@@ -1,13 +1,17 @@
+"""
+Module for reading XML files returned by BDS requests.
+
+"""
 import xml.etree.ElementTree as ET
-from coverage import Coverage, CoverageList
+from BDS.coverage import Coverage, CoverageList
 
 # Defaults
-xmlns     = "http://www.opengis.net/wcs"
-err_xmlns = "http://www.opengis.net/ows"
+XMLNS     = "http://www.opengis.net/wcs"
+ERR_XMLNS = "http://www.opengis.net/ows"
 
 ########## Generic functions ##########
 
-def getElements(path, root, single_elem=False, namespace=None):
+def get_elements(path, root, single_elem=False, namespace=None):
     """
     Extract elements at given xml path.
 
@@ -51,7 +55,7 @@ def getElements(path, root, single_elem=False, namespace=None):
     else:
         return elems
 
-def getElementsText(path, root, single_elem=False, namespace=None):
+def get_elements_text(path, root, single_elem=False, namespace=None):
     """
     Extract elements' text at given xml path.
 
@@ -76,8 +80,8 @@ def getElementsText(path, root, single_elem=False, namespace=None):
         list of strings or string (if single_elem=True)
 
     """
-    elememts = getElements(path, root, single_elem=single_elem,
-                           namespace=namespace)
+    elememts = get_elements(path, root, single_elem=single_elem,
+                            namespace=namespace)
     if single_elem:
         # Put single element in list so the same code can be used to do text
         # checks.
@@ -107,7 +111,7 @@ def getElementsText(path, root, single_elem=False, namespace=None):
 
 ########## BDS XML functions ##########
 
-def getBBox(root, namespace=xmlns):
+def get_bbox(root, namespace=XMLNS):
     """
     There are two elements within the LonLatEnvelope element, the first is
     the longitude min and max, the second is the latitude. Extact this data
@@ -128,8 +132,8 @@ def getBBox(root, namespace=xmlns):
 
     """
     # single_elem = True rasies error if none found.
-    lonLatEnvelope = getElements("lonLatEnvelope", root, single_elem=True,
-                                 namespace=namespace)
+    lonLatEnvelope = get_elements("lonLatEnvelope", root, single_elem=True,
+                                  namespace=namespace)
     lons = lonLatEnvelope[0]
     lons = lons.text.split()
     lats = lonLatEnvelope[1]
@@ -137,7 +141,7 @@ def getBBox(root, namespace=xmlns):
     return [float(lons[0]), float(lats[0]),
             float(lons[1]), float(lats[1])]
 
-def getValues(root, single_elem=False, namespace=xmlns):
+def get_values(root, single_elem=False, namespace=XMLNS):
     """
     Values are given under the element path "values/singleValue". Given a root
     element, extract all values and return in list.
@@ -161,10 +165,10 @@ def getValues(root, single_elem=False, namespace=xmlns):
 
 
     """
-    return getElementsText("values/singleValue", root,
-                           single_elem=single_elem, namespace=namespace)
+    return get_elements_text("values/singleValue", root,
+                             single_elem=single_elem, namespace=namespace)
 
-def getAxisDescriberValues(name, root, namespace=xmlns):
+def get_axis_describer_values(name, root, namespace=XMLNS):
     """
     Get all elements that come under the AxisDescription element;
     e.g. initialisation, forecast time, elevation.
@@ -183,17 +187,17 @@ def getAxisDescriberValues(name, root, namespace=xmlns):
         The xml namespace for the AxisDescription element.
 
     """
-    axis_elems = getElements("rangeSet/RangeSet/axisDescription/"\
-                             "AxisDescription",
-                             root, namespace=namespace)
+    axis_elems = get_elements("rangeSet/RangeSet/axisDescription/"\
+                              "AxisDescription",
+                              root, namespace=namespace)
     for axis_elem in axis_elems:
-        elem_name = getElementsText("name", root=axis_elem, single_elem=True,
-                                    namespace=namespace)
+        elem_name = get_elements_text("name", root=axis_elem, single_elem=True,
+                                      namespace=namespace)
         if elem_name == name:
-            return getValues(axis_elem, namespace=namespace)
+            return get_values(axis_elem, namespace=namespace)
     return []
 
-def check_xml(root, namespace=err_xmlns):
+def check_xml(root, namespace=ERR_XMLNS):
     """
     Check the XML is not the error response
 
@@ -203,8 +207,8 @@ def check_xml(root, namespace=err_xmlns):
     else:
         error_tag = "ExceptionReport"
     if root.tag.strip() == error_tag:
-        err_mess = getElementsText("Exception/ExceptionText", root,
-                                   single_elem=True, namespace=namespace)
+        err_mess = get_elements_text("Exception/ExceptionText", root,
+                                     single_elem=True, namespace=namespace)
         raise UserWarning(err_mess)
 
 def read_xml(xml_str):
@@ -224,7 +228,7 @@ def read_xml(xml_str):
     check_xml(root)
     return root
 
-def read_describeCoverage_xml(xml_str, namespace=xmlns):
+def read_describeCoverage_xml(xml_str, namespace=XMLNS):
     """
     Extract coverage information from xml (given as string) returned by
     describeCoverage request to BDS and return as Coverage object.
@@ -246,37 +250,37 @@ def read_describeCoverage_xml(xml_str, namespace=xmlns):
     root = read_xml(xml_str)
     # For the describeCoverage xml, only one coverage element is returned under
     # the root.
-    cov_elem = getElements("CoverageOffering", root, single_elem=True,
-                           namespace=namespace)
-
-    name = getElementsText("name", cov_elem, single_elem=True,
-                           namespace=namespace)
-    label = getElementsText("label", cov_elem, single_elem=True,
+    cov_elem = get_elements("CoverageOffering", root, single_elem=True,
                             namespace=namespace)
-    bbox = getBBox(cov_elem, namespace=namespace)
 
-    dim_runs = getAxisDescriberValues("DIM_RUN", cov_elem,
-                                     namespace=namespace)
-    dim_forecasts = getAxisDescriberValues("DIM_FORECAST", cov_elem,
-                                          namespace=namespace)
-    times = getAxisDescriberValues("TIME", cov_elem,
-                                   namespace=namespace)
-    elevations = getAxisDescriberValues("ELEVATION", cov_elem,
-                                        namespace=namespace)
-    CRSs = getElementsText("supportedCRSs/requestCRSs",
-                           cov_elem, namespace=namespace)
-    formats = getElementsText("supportedFormats/formats",
-                              cov_elem, namespace=namespace)
-    interpolations = getElementsText("supportedInterpolations/"\
-                                     "interpolationMethod",
-                                     cov_elem, namespace=namespace)
+    name = get_elements_text("name", cov_elem, single_elem=True,
+                             namespace=namespace)
+    label = get_elements_text("label", cov_elem, single_elem=True,
+                              namespace=namespace)
+    bbox = get_bbox(cov_elem, namespace=namespace)
+
+    dim_runs = get_axis_describer_values("DIM_RUN", cov_elem,
+                                         namespace=namespace)
+    dim_forecasts = get_axis_describer_values("DIM_FORECAST", cov_elem,
+                                              namespace=namespace)
+    times = get_axis_describer_values("TIME", cov_elem,
+                                      namespace=namespace)
+    elevations = get_axis_describer_values("ELEVATION", cov_elem,
+                                           namespace=namespace)
+    CRSs = get_elements_text("supportedCRSs/requestCRSs",
+                             cov_elem, namespace=namespace)
+    formats = get_elements_text("supportedFormats/formats",
+                                cov_elem, namespace=namespace)
+    interpolations = get_elements_text("supportedInterpolations/"\
+                                       "interpolationMethod",
+                                       cov_elem, namespace=namespace)
 
     return Coverage(name=name, label=label, bbox=bbox, dim_runs=dim_runs,
                     dim_forecasts=dim_forecasts, times=times,
                     elevations=elevations, CRSs=CRSs, formats=formats,
                     interpolations=interpolations)
 
-def read_getCapabilities_xml(xml_str, namespace=xmlns):
+def read_getCapabilities_xml(xml_str, namespace=XMLNS):
     """
     Extract all coverage information from xml (given as string) returned
     by getCapabilities request to BDS and return as CoverageList object.
@@ -296,15 +300,15 @@ def read_getCapabilities_xml(xml_str, namespace=xmlns):
 
     """
     root = read_xml(xml_str)
-    cov_elems = getElements("ContentMetadata/CoverageOffering", root,
-                            namespace=namespace)
+    cov_elems = get_elements("ContentMetadata/CoverageOffering", root,
+                             namespace=namespace)
     coverages = []
     for cov_elem in cov_elems:
-        name = getElementsText("name", cov_elem, single_elem=True,
-                               namespace=namespace)
-        label = getElementsText("label", cov_elem, single_elem=True,
-                                namespace=namespace)
-        bbox = getBBox(cov_elem, namespace=namespace)
+        name = get_elements_text("name", cov_elem, single_elem=True,
+                                 namespace=namespace)
+        label = get_elements_text("label", cov_elem, single_elem=True,
+                                  namespace=namespace)
+        bbox = get_bbox(cov_elem, namespace=namespace)
         coverages.append(Coverage(name=name, label=label, bbox=bbox))
 
     return CoverageList(coverages)

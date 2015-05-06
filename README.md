@@ -6,9 +6,12 @@ Repository for all data handling.
 Python wrapper for sending and receiving requests to Met Office Beta Data
 Services (BDS).
 
-To validate the requests an API key is needed, to get this you must register
-with [Met Office DataPoint](www.metoffice.gov.uk/datapoint/) and follow the
-link to "Your DataPoint API key".
+To validate the requests an API key is needed, which must be registered with
+BDS. A key can be received by registering with
+[Met Office DataPoint](www.metoffice.gov.uk/datapoint/) and following the
+link to "Your DataPoint API key". Currently, this gives you access to DataPoint
+data only. Contact the BDS team at the Met Office to have this key registered
+to get access the BDS data.
 
 Requests are made through the _BDSRequest_ class in the _requester_ module.
 This class includes methods for the basic request types:
