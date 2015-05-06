@@ -1,6 +1,6 @@
 language: python
 python:
-- '2.7'
+    - '2.7'
 env:
     global:
         - secure: "o9AdBDz0C08hKdWDcv2Ks2rkGXB1HtAYWfnIPgNeG8mtr6iETz6WdpgENhKjFUhhPdgda/MTGJMKxoXIG0+2MpAiimF8Y8rV83vNAs+5aKH/amfFK89j0IcEYnDuQxZQfuBYmcMIBex7VUcqKjMzBNHg0vsX22j+CS2XSmAdN9g="
@@ -19,8 +19,8 @@ install:
     - python setup.py install
     - cd ..
 script:
-    - python BDS/tests/unit/UTcoverage.py
-    - python BDS/tests/unit/UTrequester.py
-    - python BDS/tests/unit/UTxml_reader.py
-    - python BDS/tests/integration/requester_test.py
+    - python tests/unit/UTcoverage.py
+    - python tests/unit/UTrequester.py
+    - python tests/unit/UTxml_reader.py
+    - python tests/integration/requester_test.py
     - pylint -E --disable=E1101 BDS
