@@ -3,7 +3,7 @@ import os
 from BDS.requester import BDSRequest
 
 # Set up global variables.
-request = BDSRequest(api_key=os.environ['API_KEY'])
+api_key=os.environ['API_KEY']
 
 # Create dummy response class.
 class Response(object):

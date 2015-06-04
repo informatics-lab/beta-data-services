@@ -1,8 +1,5 @@
-# data-manager
+# betadataservices
 
-Repository for all data handling.
-
-### BDS (Beta Data Services)
 Python wrapper for sending and receiving requests to Met Office Beta Data
 Services (BDS).
 
