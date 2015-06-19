@@ -62,6 +62,6 @@ class WCS2Requester(wcs.WCS2Requester):
         with all requests.
 
     """
-    def __init__(self, url, api_key=None, validate_api=False):
+    def __init__(self, api_key, model_feed="UKPPBEST", validate_api=False):
         url = _get_url(model_feed)
         super(WCS2Requester, self).__init__(url, api_key, validate_api)
