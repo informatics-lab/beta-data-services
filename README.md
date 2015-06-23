@@ -30,43 +30,43 @@ req = req = WCS2Requester(api_key="your-datapoint-api-key-1234")
 req.getCapabilities()
 ```
 
-_UKPPBEST_2015-06-23T03.00.00Z_AGL
-UKPPBEST_2015-06-23T03.00.00Z_Atmosphere
-UKPPBEST_2015-06-23T03.00.00Z_CloudBase
-UKPPBEST_2015-06-23T03.00.00Z_Ground
-UKPPBEST_2015-06-23T06.00.00Z_AGL
-UKPPBEST_2015-06-23T06.00.00Z_Atmosphere
-UKPPBEST_2015-06-23T06.00.00Z_CloudBase
-UKPPBEST_2015-06-23T06.00.00Z_Ground
-etc.._
+_UKPPBEST_2015-06-23T03.00.00Z_AGL  
+UKPPBEST_2015-06-23T03.00.00Z_Atmosphere  
+UKPPBEST_2015-06-23T03.00.00Z_CloudBase  
+UKPPBEST_2015-06-23T03.00.00Z_Ground  
+UKPPBEST_2015-06-23T06.00.00Z_AGL  
+UKPPBEST_2015-06-23T06.00.00Z_Atmosphere  
+UKPPBEST_2015-06-23T06.00.00Z_CloudBase  
+UKPPBEST_2015-06-23T06.00.00Z_Ground  
+etc.._  
 
 ```python
 # Take a coverage name and print out available parameters for it.
 req.describeCoverage("UKPPBEST_2015-06-23T06.00.00Z_AGL")
 ```
 
-_*** NAME ***_
-_UKPPBEST_2015-06-23T06.00.00Z_AGL_
+_*** NAME ***_  
+_UKPPBEST_2015-06-23T06.00.00Z_AGL_  
 
-_*** COMPONENTS ***_
-_Temperature_
-_Visibility_
-_Wind_Direction_
-_Wind_Gust_Speed_
-_Wind_Speed_
+_*** COMPONENTS ***_  
+_Temperature_  
+_Visibility_  
+_Wind_Direction_  
+_Wind_Gust_Speed_  
+_Wind_Speed_  
 
-_*** BBOX ***_
-_-14.0, 47.5, 7.0, 61.0_
+_*** BBOX ***_  
+_-14.0, 47.5, 7.0, 61.0_  
 
-_*** DIM_RUNS ***_
-_2015-06-23T06:00:00Z_
+_*** DIM_RUNS ***_  
+_2015-06-23T06:00:00Z_  
 
-_*** ELEVEATIONS ***_
-_10_
+_*** ELEVEATIONS ***_  
+_10_  
 
-_*** FORMATS ***_
-_NetCDF3_
-_GRIB2_
+_*** FORMATS ***_  
+_NetCDF3_  
+_GRIB2_  
 
 ```python
 # Get a the coverage data and save to file.
