@@ -1,3 +1,9 @@
+"""
+Module to get data from Met Office Beta Data Services.
+This is a simple extension of the webcoverageservice module. See
+webcoverageservice for most documentation.
+
+"""
 import webcoverageservice as wcs
 
 VALID_MODEL_FEEDS = ["UKPPBEST"]
