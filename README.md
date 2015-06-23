@@ -45,28 +45,28 @@ etc.._
 req.describeCoverage("UKPPBEST_2015-06-23T06.00.00Z_AGL")
 ```
 
-_*** NAME ***
-UKPPBEST_2015-06-23T06.00.00Z_AGL
+_*** NAME ***_
+_UKPPBEST_2015-06-23T06.00.00Z_AGL_
 
-*** COMPONENTS ***
-Temperature
-Visibility
-Wind_Direction
-Wind_Gust_Speed
-Wind_Speed
+_*** COMPONENTS ***_
+_Temperature_
+_Visibility_
+_Wind_Direction_
+_Wind_Gust_Speed_
+_Wind_Speed_
 
-*** BBOX ***
--14.0, 47.5, 7.0, 61.0
+_*** BBOX ***_
+_-14.0, 47.5, 7.0, 61.0_
 
-*** DIM_RUNS ***
-2015-06-23T06:00:00Z
+_*** DIM_RUNS ***_
+_2015-06-23T06:00:00Z_
 
-*** ELEVEATIONS ***
-10
+_*** ELEVEATIONS ***_
+_10_
 
-*** FORMATS ***
-NetCDF3
-GRIB2_
+_*** FORMATS ***_
+_NetCDF3_
+_GRIB2_
 
 ```python
 # Get a the coverage data and save to file.
@@ -77,5 +77,5 @@ req.getCoverage(coverage_id="UKPPBEST_2015-06-23T06.00.00Z_AGL",
                 bbox=[-14.0, 47.5, 7.0, 61.0],
                 time="2015-06-23T06:00:00Z",
                 savepath="path/to/save.nc")
-                
+
 ```
