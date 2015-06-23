@@ -60,14 +60,7 @@ _-14.0, 47.5, 7.0, 61.0_
 
 _*** DIM_RUNS ***_  
 _2015-06-23T06:00:00Z_  
-
-_*** ELEVEATIONS ***_  
-_10_  
-
-_*** FORMATS ***_  
-_NetCDF3_  
-_GRIB2_  
-
+ 
 ```python
 # Get a the coverage data and save to file.
 req.getCoverage(coverage_id="UKPPBEST_2015-06-23T06.00.00Z_AGL",
