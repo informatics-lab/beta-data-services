@@ -25,7 +25,7 @@ _WCS2Requester_ also includes:
 **Example use:**
 
 ```python
-req = req = WCS2Requester(api_key="your-datapoint-api-key-1234")
+req = WCS2Requester(api_key="your-datapoint-api-key-1234")
 # Print out all available coverages.
 req.getCapabilities()
 ```
@@ -60,7 +60,7 @@ _-14.0, 47.5, 7.0, 61.0_
 
 _*** DIM_RUNS ***_  
 _2015-06-23T06:00:00Z_  
- 
+
 ```python
 # Get a the coverage data and save to file.
 req.getCoverage(coverage_id="UKPPBEST_2015-06-23T06.00.00Z_AGL",
