@@ -6,7 +6,7 @@ webcoverageservice for most documentation.
 """
 import webcoverageservice as wcs
 
-VALID_MODEL_FEEDS = ["UKPPBEST"]
+VALID_MODEL_FEEDS = ["UKPPBEST", "UKV1EGRR"]
 
 def _get_url(model_feed):
     """
