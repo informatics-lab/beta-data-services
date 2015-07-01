@@ -6,7 +6,11 @@ webcoverageservice for most documentation.
 """
 import webcoverageservice as wcs
 
-VALID_MODEL_FEEDS = ["UKPPBEST", "UKV1EGRR"]
+VALID_MODEL_FEEDS = ["EGloEGRR",
+                     "UKPPBEST",
+                     "UKPPNOW",
+                     "EURO4",
+                     "GlobEGRR"]
 
 def _get_url(model_feed):
     """
@@ -20,7 +24,8 @@ def _get_url(model_feed):
 def _check_model_feed(model_feed):
     if model_feed not in VALID_MODEL_FEEDS:
         raise UserWarning("%s is an invalid model feed. Valid model feeds"\
-                          " are %s" % (model_feed, VALID_MODEL_FEEDS))
+                          " are %s" % (model_feed,
+                                       VALID_MODEL_FEEDS.join("/n")))
 
 class WCS1Requester(wcs.WCS1Requester):
     """
@@ -43,7 +48,7 @@ class WCS1Requester(wcs.WCS1Requester):
         with all requests.
 
     """
-    def __init__(self, api_key, model_feed="UKPPBEST", validate_api=False):
+    def __init__(self, api_key, model_feed, validate_api=False):
         url = _get_url(model_feed)
         super(WCS1Requester, self).__init__(url, api_key, validate_api)
 
@@ -68,6 +73,6 @@ class WCS2Requester(wcs.WCS2Requester):
         with all requests.
 
     """
-    def __init__(self, api_key, model_feed="UKPPBEST", validate_api=False):
+    def __init__(self, api_key, model_feed, validate_api=False):
         url = _get_url(model_feed)
         super(WCS2Requester, self).__init__(url, api_key, validate_api)
