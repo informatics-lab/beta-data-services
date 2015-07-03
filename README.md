@@ -77,9 +77,6 @@ _2015-06-23T06:00:00Z_
 req.getCoverage(coverage_id="UKPPBEST_2015-06-23T06.00.00Z_AGL",
                 components="Temperature",
                 format="NetCDF3",
-                elevation=10,
-                bbox=[-14.0, 47.5, 7.0, 61.0],
-                time="2015-06-23T06:00:00Z",
                 savepath="path/to/save.nc")
 
 ```
