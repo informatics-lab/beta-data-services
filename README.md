@@ -29,11 +29,11 @@ import betadataservices as bds
 
 bds.available_model_feeds()
 ```
-_EGloEGRR
-UKPPBEST
-UKPPNOW
-EURO4
-GlobEGRR_
+_EGloEGRR  
+UKPPBEST  
+UKPPNOW  
+EURO4  
+GlobEGRR_  
 ```python
 req = bds.WCS2Requester(api_key="your-datapoint-api-key-1234",
                         model_feed="UKPPBEST")
