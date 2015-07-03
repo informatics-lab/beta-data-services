@@ -25,7 +25,18 @@ _WCS2Requester_ also includes:
 **Example use:**
 
 ```python
-req = WCS2Requester(api_key="your-datapoint-api-key-1234")
+import betadataservices as bds
+
+bds.available_model_feeds()
+```
+_EGloEGRR
+UKPPBEST
+UKPPNOW
+EURO4
+GlobEGRR_
+```python
+req = bds.WCS2Requester(api_key="your-datapoint-api-key-1234",
+                        model_feed="UKPPBEST")
 # Print out all available coverages.
 req.getCapabilities()
 ```
