@@ -73,7 +73,7 @@ _*** DIM_RUNS ***_
 _2015-06-23T06:00:00Z_  
 
 ```python
-# Get a the coverage data and save to file.
+# Get the coverage data and save to file.
 req.getCoverage(coverage_id="UKPPBEST_2015-06-23T06.00.00Z_AGL",
                 components="Temperature",
                 format="NetCDF3",
