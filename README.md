@@ -1,7 +1,8 @@
 # betadataservices
 
 Python wrapper for sending and receiving requests to Met Office Beta Data
-Services (BDS).
+Services (BDS). This module requires the module webcoverageservice which can be
+installed from https://github.com/met-office-lab/ogc-web-services
 
 To validate the requests an API key is needed, which must be registered with
 BDS. A key can be received by registering with
