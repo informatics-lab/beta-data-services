@@ -14,7 +14,7 @@ VALID_MODEL_FEEDS = ["EGloEGRR",
                      "INFORMATICS"]
 
 def available_model_feeds():
-    print VALID_MODEL_FEEDS.join("\n")
+    print "\n".join(VALID_MODEL_FEEDS)
 
 def _get_url(model_feed):
     """
@@ -29,7 +29,7 @@ def _check_model_feed(model_feed):
     if model_feed not in VALID_MODEL_FEEDS:
         raise UserWarning("%s is an invalid model feed. Valid model feeds"\
                           " are\n%s" % (model_feed,
-                                       ("\n").join(VALID_MODEL_FEEDS)))
+                                       "\n".join(VALID_MODEL_FEEDS)))
 
 class WCS1Requester(wcs.WCS1Requester):
     """
