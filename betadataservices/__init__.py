@@ -6,12 +6,12 @@ webcoverageservice for most documentation.
 """
 import webcoverageservice as wcs
 
-VALID_MODEL_FEEDS = ["EGloEGRR",
+VALID_MODEL_FEEDS = ["EGloEGRR", # Global model
                      "UKPPBEST",
                      "UKPPNOW",
                      "EURO4",
                      "GlobEGRR",
-                     "INFORMATICS"]
+                     "UKV2EGRR"]
 
 def available_model_feeds():
     print VALID_MODEL_FEEDS.join("\n")
