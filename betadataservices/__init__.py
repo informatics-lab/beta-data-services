@@ -11,7 +11,8 @@ VALID_MODEL_FEEDS = ["EGloEGRR", # Global model
                      "UKPPNOW",
                      "EURO4",
                      "GlobEGRR",
-                     "UKV2EGRR"]
+                     "UKV2EGRR",
+                     "INFORMATICS"]
 
 def available_model_feeds():
     print "\n".join(VALID_MODEL_FEEDS)
